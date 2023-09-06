@@ -773,7 +773,7 @@ enum class BooleanSetting(
         Settings.FILE_GFX,
         Settings.SECTION_GFX_COLOR_CORRECTION,
         "CorrectGamma",
-        false
+        true
     ),
     GFX_STEREO_SWAP_EYES(Settings.FILE_GFX, Settings.SECTION_STEREOSCOPY, "StereoSwapEyes", false),
     GFX_HACK_EFB_ACCESS_ENABLE(
