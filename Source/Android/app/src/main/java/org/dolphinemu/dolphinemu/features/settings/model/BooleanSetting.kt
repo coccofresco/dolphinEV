@@ -30,7 +30,7 @@ enum class BooleanSetting(
         "OverrideRegionSettings",
         false
     ),
-    MAIN_AUDIO_STRETCH(Settings.FILE_DOLPHIN, Settings.SECTION_INI_CORE, "AudioStretch", false),
+    MAIN_AUDIO_STRETCH(Settings.FILE_DOLPHIN, Settings.SECTION_INI_CORE, "AudioStretch", true),
     MAIN_BBA_XLINK_CHAT_OSD(
         Settings.FILE_DOLPHIN,
         Settings.SECTION_INI_CORE,
@@ -98,7 +98,7 @@ enum class BooleanSetting(
         Settings.FILE_DOLPHIN,
         Settings.SECTION_INI_CORE,
         "OverclockEnable",
-        false
+        true
     ),
     MAIN_RAM_OVERRIDE_ENABLE(
         Settings.FILE_DOLPHIN,
@@ -775,7 +775,7 @@ enum class BooleanSetting(
         Settings.FILE_GFX,
         Settings.SECTION_GFX_COLOR_CORRECTION,
         "CorrectGamma",
-        false
+        true
     ),
     GFX_STEREO_SWAP_EYES(Settings.FILE_GFX, Settings.SECTION_STEREOSCOPY, "StereoSwapEyes", false),
     GFX_HACK_EFB_ACCESS_ENABLE(
@@ -819,7 +819,7 @@ enum class BooleanSetting(
         Settings.FILE_GFX,
         Settings.SECTION_GFX_HACKS,
         "ImmediateXFBEnable",
-        false
+        true
     ),
     GFX_HACK_SKIP_DUPLICATE_XFBS(
         Settings.FILE_GFX,
@@ -840,7 +840,7 @@ enum class BooleanSetting(
         "VertexRounding",
         false
     ),
-    GFX_HACK_VI_SKIP(Settings.FILE_GFX, Settings.SECTION_GFX_HACKS, "VISkip", false),
+    GFX_HACK_VI_SKIP(Settings.FILE_GFX, Settings.SECTION_GFX_HACKS, "VISkip", true),
     GFX_HACK_FAST_TEXTURE_SAMPLING(
         Settings.FILE_GFX,
         Settings.SECTION_GFX_HACKS,
