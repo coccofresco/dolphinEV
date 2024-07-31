@@ -48,7 +48,7 @@ void InitOnAndroid(JNIEnv* env, jobject obj, const char* vendor, int version, co
   s_module_base = new Base();
   s_module_input = new Input();
   s_module_renderer = new Renderer();
-  s_module_renderer->SetConfigFloat(CONFIG_CANVAS_DISTANCE, 4.0f);
+  s_module_renderer->SetConfigFloat(CONFIG_CANVAS_DISTANCE, 2.0f);
 
   // Set platform flags
   if ((strcmp(vendor, "Meta") == 0) || (strcmp(vendor, "Oculus") == 0))
