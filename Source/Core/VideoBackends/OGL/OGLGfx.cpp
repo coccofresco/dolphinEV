@@ -334,6 +334,10 @@ void OGLGfx::SetFramebuffer(AbstractFramebuffer* framebuffer)
 
   glBindFramebuffer(GL_FRAMEBUFFER, static_cast<OGLFramebuffer*>(framebuffer)->GetFBO());
   m_current_framebuffer = framebuffer;
+
+  if ((framebuffer->GetWidth() < 1000) && (framebuffer->GetHeight() < 1000)) {
+      glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  }
 }
 
 void OGLGfx::SetAndDiscardFramebuffer(AbstractFramebuffer* framebuffer)
@@ -752,6 +756,11 @@ void OGLGfx::RestoreFramebufferBinding()
   glBindFramebuffer(
       GL_FRAMEBUFFER,
       m_current_framebuffer ? static_cast<OGLFramebuffer*>(m_current_framebuffer)->GetFBO() : 0);
+
+
+    if (m_current_framebuffer && (m_current_framebuffer->GetWidth() < 1000) && (m_current_framebuffer->GetHeight() < 1000)) {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
 }
 
 SurfaceInfo OGLGfx::GetSurfaceInfo() const
