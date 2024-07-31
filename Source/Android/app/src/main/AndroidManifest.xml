@@ -144,6 +144,7 @@
             android:process=":vr_process"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="com.oculus.intent.category.VR" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
