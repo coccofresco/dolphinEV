@@ -92,6 +92,9 @@ void Renderer::GetResolution(Base* engine, int* pWidth, int* pHeight)
     *pWidth = width;
     *pHeight = height;
   }
+
+  *pWidth *= 1.3f;
+  *pHeight *= 1.3f;
 }
 
 void Renderer::Init(Base* engine)
@@ -136,8 +139,8 @@ void Renderer::Init(Base* engine)
   m_projections = (XrView*)(malloc(MaxNumEyes * sizeof(XrView)));
 
   // Create framebuffers.
-  int width = m_view_config[0].recommendedImageRectWidth;
-  int height = m_view_config[0].recommendedImageRectHeight;
+  int width, height;
+  GetResolution(engine, &width, &height);
   for (int i = 0; i < MaxNumEyes; i++)
   {
     m_framebuffer[i].Create(engine->GetSession(), width, height);

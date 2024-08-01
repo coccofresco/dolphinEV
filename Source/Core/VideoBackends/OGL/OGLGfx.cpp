@@ -335,7 +335,8 @@ void OGLGfx::SetFramebuffer(AbstractFramebuffer* framebuffer)
   glBindFramebuffer(GL_FRAMEBUFFER, static_cast<OGLFramebuffer*>(framebuffer)->GetFBO());
   m_current_framebuffer = framebuffer;
 
-  if ((framebuffer->GetWidth() < 1000) && (framebuffer->GetHeight() < 1000)) {
+  if (framebuffer->GetWidth() % 640 > 0)
+  {
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }
 }
@@ -758,7 +759,8 @@ void OGLGfx::RestoreFramebufferBinding()
       m_current_framebuffer ? static_cast<OGLFramebuffer*>(m_current_framebuffer)->GetFBO() : 0);
 
 
-    if (m_current_framebuffer && (m_current_framebuffer->GetWidth() < 1000) && (m_current_framebuffer->GetHeight() < 1000)) {
+    if (m_current_framebuffer && (m_current_framebuffer->GetWidth() % 640 > 0))
+    {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 }
