@@ -104,7 +104,7 @@ void Nunchuk::BuildDesiredExtensionState(DesiredExtensionState* target_state)
   EmulateShake(&m_shake_state, m_shake, 1.f / ::Wiimote::UPDATE_FREQ);
 
   // TODO:this is just a raw integration to make games playable in VR, the math isn't correct
-  if (Common::VR::IsEnabled())
+  if (Common::VR::IsEnabled() && 0)
   {
     // Rotational state m_tilt_state
     static Common::Vec3 last_tilt = {};
