@@ -16,7 +16,7 @@
 #include "Common/GekkoDisassembler.h"
 #include "Common/StringUtil.h"
 
-#include "Core/Config/AchievementSettings.h"
+#include "Core/AchievementManager.h"
 #include "Core/Config/MainSettings.h"
 #include "Core/Core.h"
 #include "Core/Debugger/OSThread.h"
@@ -30,10 +30,9 @@
 void ApplyMemoryPatch(const Core::CPUThreadGuard& guard, Common::Debug::MemoryPatch& patch,
                       bool store_existing_value)
 {
-#ifdef USE_RETRO_ACHIEVEMENTS
-  if (Config::Get(Config::RA_HARDCORE_ENABLED))
+  if (AchievementManager::GetInstance().IsHardcoreModeActive())
     return;
-#endif  // USE_RETRO_ACHIEVEMENTS
+
   if (patch.value.empty())
     return;
 
@@ -90,7 +89,8 @@ void PPCPatches::UnPatch(std::size_t index)
   PatchEngine::RemoveMemoryPatch(index);
 }
 
-PPCDebugInterface::PPCDebugInterface(Core::System& system) : m_system(system)
+PPCDebugInterface::PPCDebugInterface(Core::System& system, PPCSymbolDB& ppc_symbol_db)
+    : m_system(system), m_ppc_symbol_db(ppc_symbol_db)
 {
 }
 
@@ -349,7 +349,7 @@ u32 PPCDebugInterface::ReadInstruction(const Core::CPUThreadGuard& guard, u32 ad
 
 bool PPCDebugInterface::IsAlive() const
 {
-  return Core::IsRunningAndStarted();
+  return Core::IsRunning(m_system);
 }
 
 bool PPCDebugInterface::IsBreakpoint(u32 address) const
@@ -423,7 +423,7 @@ u32 PPCDebugInterface::GetColor(const Core::CPUThreadGuard* guard, u32 address) 
   if (!PowerPC::MMU::HostIsRAMAddress(*guard, address))
     return 0xeeeeee;
 
-  Common::Symbol* symbol = g_symbolDB.GetSymbolFromAddr(address);
+  const Common::Symbol* const symbol = m_ppc_symbol_db.GetSymbolFromAddr(address);
   if (!symbol)
     return 0xFFFFFF;
   if (symbol->type != Common::Symbol::Type::Function)
@@ -441,9 +441,9 @@ u32 PPCDebugInterface::GetColor(const Core::CPUThreadGuard* guard, u32 address) 
 }
 // =============
 
-std::string PPCDebugInterface::GetDescription(u32 address) const
+std::string_view PPCDebugInterface::GetDescription(u32 address) const
 {
-  return g_symbolDB.GetDescription(address);
+  return m_ppc_symbol_db.GetDescription(address);
 }
 
 std::optional<u32>

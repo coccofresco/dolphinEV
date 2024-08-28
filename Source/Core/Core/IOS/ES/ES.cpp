@@ -112,9 +112,9 @@ ESCore::~ESCore() = default;
 ESDevice::ESDevice(EmulationKernel& ios, ESCore& core, const std::string& device_name)
     : EmulationDevice(ios, device_name), m_core(core)
 {
-  if (Core::IsRunningAndStarted())
+  auto& system = ios.GetSystem();
+  if (Core::IsRunning(system))
   {
-    auto& system = ios.GetSystem();
     auto& core_timing = system.GetCoreTiming();
     core_timing.RemoveEvent(s_finish_init_event);
     core_timing.ScheduleEvent(GetESBootTicks(ios.GetVersion()), s_finish_init_event);
@@ -446,7 +446,7 @@ bool ESDevice::LaunchPPCTitle(u64 title_id)
     }
 
     const u64 required_ios = tmd.GetIOSId();
-    if (!Core::IsRunningAndStarted())
+    if (!Core::IsRunning(system))
       return LaunchTitle(required_ios, HangPPC::Yes);
     core_timing.RemoveEvent(s_reload_ios_for_ppc_launch_event);
     core_timing.ScheduleEvent(ticks, s_reload_ios_for_ppc_launch_event, required_ios);
@@ -475,14 +475,12 @@ bool ESDevice::LaunchPPCTitle(u64 title_id)
     return false;
 
   m_pending_ppc_boot_content_path = m_core.GetContentPath(tmd.GetTitleId(), content);
-  if (!Core::IsRunningAndStarted())
+  if (!Core::IsRunning(system))
     return BootstrapPPC();
 
-#ifdef USE_RETRO_ACHIEVEMENTS
   INFO_LOG_FMT(ACHIEVEMENTS,
                "WAD and NAND formats not currently supported by Achievement Manager.");
-  AchievementManager::GetInstance().SetDisabled(true);
-#endif  // USE_RETRO_ACHIEVEMENTS
+  AchievementManager::GetInstance().CloseGame();
 
   core_timing.RemoveEvent(s_bootstrap_ppc_for_launch_event);
   core_timing.ScheduleEvent(ticks, s_bootstrap_ppc_for_launch_event);
@@ -982,7 +980,8 @@ IPCReply ESDevice::SetUpStreamKey(const Context& context, const IOCtlVRequest& r
 
   u32 handle;
   const ReturnCode ret = m_core.SetUpStreamKey(
-      context.uid, memory.GetPointer(request.in_vectors[0].address), tmd, &handle);
+      context.uid, memory.GetPointerForRange(request.in_vectors[0].address, sizeof(ES::TicketView)),
+      tmd, &handle);
   memory.Write_U32(handle, request.io_vectors[0].address);
   return IPCReply(ret);
 }
@@ -1016,11 +1015,11 @@ bool ESCore::IsIssuerCorrect(VerifyContainerType type, const ES::CertReader& iss
   switch (type)
   {
   case VerifyContainerType::TMD:
-    return issuer_cert.GetName().compare(0, 2, "CP") == 0;
+    return issuer_cert.GetName().starts_with("CP");
   case VerifyContainerType::Ticket:
-    return issuer_cert.GetName().compare(0, 2, "XS") == 0;
+    return issuer_cert.GetName().starts_with("XS");
   case VerifyContainerType::Device:
-    return issuer_cert.GetName().compare(0, 2, "MS") == 0;
+    return issuer_cert.GetName().starts_with("MS");
   default:
     return false;
   }
