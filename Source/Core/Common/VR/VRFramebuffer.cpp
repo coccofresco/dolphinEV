@@ -40,9 +40,7 @@ bool Framebuffer::Create(XrSession session, int width, int height)
 void Framebuffer::Destroy()
 {
 #if XR_USE_GRAPHICS_API_OPENGL_ES
-  GL(glDeleteRenderbuffers(m_swapchain_length, m_gl_depth_buffers));
   GL(glDeleteFramebuffers(m_swapchain_length, m_gl_frame_buffers));
-  delete[] m_gl_depth_buffers;
   delete[] m_gl_frame_buffers;
 #endif
   OXR(xrDestroySwapchain(m_handle));
@@ -76,7 +74,7 @@ void Framebuffer::Acquire()
   GL(glViewport(0, 0, m_width, m_height));
   GL(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
   GL(glScissor(0, 0, m_width, m_height));
-  GL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+  GL(glClear(GL_COLOR_BUFFER_BIT));
   GL(glScissor(0, 0, 0, 0));
   GL(glDisable(GL_SCISSOR_TEST));
 #endif
@@ -132,7 +130,6 @@ bool Framebuffer::CreateGL(XrSession session, int width, int height)
   OXR(xrEnumerateSwapchainImages(m_handle, m_swapchain_length, &m_swapchain_length,
                                  (XrSwapchainImageBaseHeader*)m_swapchain_image));
 
-  m_gl_depth_buffers = new GLuint[m_swapchain_length];
   m_gl_frame_buffers = new GLuint[m_swapchain_length];
   for (uint32_t i = 0; i < m_swapchain_length; i++)
   {
@@ -145,19 +142,9 @@ bool Framebuffer::CreateGL(XrSession session, int width, int height)
     GL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
     GL(glBindTexture(GL_TEXTURE_2D, 0));
 
-    // Create depth buffer.
-    GL(glGenRenderbuffers(1, &m_gl_depth_buffers[i]));
-    GL(glBindRenderbuffer(GL_RENDERBUFFER, m_gl_depth_buffers[i]));
-    GL(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height));
-    GL(glBindRenderbuffer(GL_RENDERBUFFER, 0));
-
     // Create the frame buffer.
     GL(glGenFramebuffers(1, &m_gl_frame_buffers[i]));
     GL(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_gl_frame_buffers[i]));
-    GL(glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
-                                 m_gl_depth_buffers[i]));
-    GL(glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
-                                 m_gl_depth_buffers[i]));
     GL(glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                               color_texture, 0));
     GL(GLenum renderFramebufferStatus = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER));

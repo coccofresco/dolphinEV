@@ -35,7 +35,6 @@ private:
   uint32_t m_swapchain_length;
   void* m_swapchain_image;
 
-  unsigned int* m_gl_depth_buffers;
   unsigned int* m_gl_frame_buffers;
 };
 }  // namespace Common::VR
