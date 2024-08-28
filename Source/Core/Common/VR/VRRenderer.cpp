@@ -532,6 +532,8 @@ void Renderer::Recenter(Base* engine)
   // Create a default stage space to use if SPACE_TYPE_STAGE is not
   // supported, or calls to xrGetReferenceSpaceBoundsRect fail.
   space_info.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_LOCAL;
+  space_info.poseInReferenceSpace = {};
+  space_info.poseInReferenceSpace.orientation.w = 1.0;
   if (engine->GetPlatformFlag(PLATFORM_TRACKING_FLOOR))
   {
     space_info.poseInReferenceSpace.position.y = -1.6750f;
@@ -543,7 +545,8 @@ void Renderer::Recenter(Base* engine)
   if (m_stage_supported)
   {
     space_info.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_STAGE;
-    space_info.poseInReferenceSpace.position.y = 0.0;
+    space_info.poseInReferenceSpace = {};
+    space_info.poseInReferenceSpace.orientation.w = 1.0;
     engine->UpdateStageSpace(&space_info);
     NOTICE_LOG_FMT(VR, "Created stage space");
     if (engine->GetPlatformFlag(PLATFORM_TRACKING_FLOOR))
