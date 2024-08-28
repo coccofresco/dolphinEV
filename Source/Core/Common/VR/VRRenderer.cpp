@@ -487,6 +487,7 @@ void Renderer::HandleXrEvents(Base* engine)
       default:
         break;
       }
+      Recenter(engine);
       break;
     }
     default:
