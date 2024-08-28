@@ -442,29 +442,7 @@ void OGLGfx::PresentBackbuffer()
     }
   }
 
-  // Swap the back and front buffers, presenting the image.
-  if (Common::VR::IsEnabled())
-  {
-    if (!m_vr_initialized)
-    {
-      Common::VR::Start(true);
-      m_vr_initialized = true;
-    }
-
-    if (m_vr_frame_started)
-    {
-      Common::VR::PostFrameRender();
-      Common::VR::FinishRender();
-      m_vr_frame_started = false;
-    }
-
-    if (Common::VR::StartRender())
-    {
-      Common::VR::PreFrameRender(0);
-      m_vr_frame_started = true;
-    }
-  }
-  else
+  if (!Common::VR::IsEnabled())
   {
     m_main_gl_context->Swap();
   }

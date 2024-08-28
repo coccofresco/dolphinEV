@@ -818,6 +818,22 @@ void Presenter::Present()
 
   UpdateDrawRectangle();
 
+  static bool m_vr_initialized = false;
+  static bool m_vr_frame_started = false;
+  if (Common::VR::IsEnabled())
+  {
+    if (!m_vr_initialized)
+    {
+      Common::VR::Start(true);
+      m_vr_initialized = true;
+    }
+    if (Common::VR::StartRender())
+    {
+      Common::VR::PreFrameRender(0);
+      m_vr_frame_started = true;
+    }
+  }
+
   g_gfx->BeginUtilityDrawing();
   g_gfx->BindBackbuffer({{0.0f, 0.0f, 0.0f, 1.0f}});
 
@@ -855,6 +871,13 @@ void Presenter::Present()
     m_onscreen_ui->BeginImGuiFrame(m_backbuffer_width, m_backbuffer_height);
 
   g_gfx->EndUtilityDrawing();
+
+  if (m_vr_frame_started)
+  {
+    Common::VR::PostFrameRender();
+    Common::VR::FinishRender();
+    m_vr_frame_started = false;
+  }
 }
 
 void Presenter::SetKeyMap(const DolphinKeyMap& key_map)
