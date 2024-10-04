@@ -100,7 +100,7 @@ enum class IntSetting(
         6
     ),
     GFX_MSAA(Settings.FILE_GFX, Settings.SECTION_GFX_SETTINGS, "MSAA", 1),
-    GFX_EFB_SCALE(Settings.FILE_GFX, Settings.SECTION_GFX_SETTINGS, "InternalResolution", 1),
+    GFX_EFB_SCALE(Settings.FILE_GFX, Settings.SECTION_GFX_SETTINGS, "InternalResolution", 3),
     GFX_SHADER_COMPILATION_MODE(
         Settings.FILE_GFX,
         Settings.SECTION_GFX_SETTINGS,

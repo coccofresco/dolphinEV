@@ -50,6 +50,20 @@ add_library(common
   Debug/Threads.h
   Debug/Watches.cpp
   Debug/Watches.h
+  VR/DolphinVR.cpp
+  VR/DolphinVR.h
+  VR/OpenXRLoader.cpp
+  VR/OpenXRLoader.h
+  VR/VRBase.cpp
+  VR/VRBase.h
+  VR/VRFramebuffer.cpp
+  VR/VRFramebuffer.h
+  VR/VRInput.cpp
+  VR/VRInput.h
+  VR/VRMath.cpp
+  VR/VRMath.h
+  VR/VRRenderer.cpp
+  VR/VRRenderer.h
   DynamicLibrary.cpp
   DynamicLibrary.h
   ENet.cpp
@@ -87,6 +101,7 @@ add_library(common
   JitRegister.cpp
   JitRegister.h
   JsonUtil.h
+  JsonUtil.cpp
   Lazy.h
   LinearDiskCache.h
   Logging/ConsoleListener.h
@@ -108,8 +123,6 @@ add_library(common
   Network.h
   PcapFile.cpp
   PcapFile.h
-  PerformanceCounter.cpp
-  PerformanceCounter.h
   Profiler.cpp
   Profiler.h
   QoSSession.cpp
@@ -128,6 +141,7 @@ add_library(common
   SmallVector.h
   SocketContext.cpp
   SocketContext.h
+  SpanUtils.h
   SPSCQueue.h
   StringLiteral.h
   StringUtil.cpp
@@ -138,10 +152,13 @@ add_library(common
   Thread.h
   Timer.cpp
   Timer.h
+  TimeUtil.cpp
+  TimeUtil.h
   TraversalClient.cpp
   TraversalClient.h
   TraversalProto.h
   TypeUtils.h
+  Unreachable.h
   UPnP.cpp
   UPnP.h
   VariantUtil.h
@@ -353,3 +370,11 @@ if(MSVC)
   # Add precompiled header
   target_link_libraries(common PRIVATE use_pch)
 endif()
+
+if(OPENXR)
+  add_definitions(-DOPENXR)
+  target_link_libraries(common PRIVATE openxr_loader)
+  message("OpenXR enabled")
+endif()
+
+include_directories(../../../Externals/openxr)

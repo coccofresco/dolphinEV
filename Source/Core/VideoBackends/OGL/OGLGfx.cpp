@@ -6,6 +6,7 @@
 #include "Common/GL/GLContext.h"
 #include "Common/GL/GLExtensions/GLExtensions.h"
 #include "Common/Logging/LogManager.h"
+#include "Common/VR/DolphinVR.h"
 
 #include "Core/Config/GraphicsSettings.h"
 
@@ -333,6 +334,13 @@ void OGLGfx::SetFramebuffer(AbstractFramebuffer* framebuffer)
 
   glBindFramebuffer(GL_FRAMEBUFFER, static_cast<OGLFramebuffer*>(framebuffer)->GetFBO());
   m_current_framebuffer = framebuffer;
+
+  if ((framebuffer->GetWidth() % 640 > 0) && (framebuffer->GetWidth() < 1000))
+  {
+      glClearColor(0, 0, 0, 0);
+      glClear(GL_COLOR_BUFFER_BIT);
+      glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  }
 }
 
 void OGLGfx::SetAndDiscardFramebuffer(AbstractFramebuffer* framebuffer)
@@ -412,6 +420,11 @@ void OGLGfx::BindBackbuffer(const ClearColor& clear_color)
   CheckForSurfaceChange();
   CheckForSurfaceResize();
   SetAndClearFramebuffer(m_system_framebuffer.get(), clear_color);
+
+  if (Common::VR::IsEnabled())
+  {
+    Common::VR::BindFramebuffer();
+  }
 }
 
 void OGLGfx::PresentBackbuffer()
@@ -429,8 +442,10 @@ void OGLGfx::PresentBackbuffer()
     }
   }
 
-  // Swap the back and front buffers, presenting the image.
-  m_main_gl_context->Swap();
+  if (!Common::VR::IsEnabled())
+  {
+    m_main_gl_context->Swap();
+  }
 }
 
 void OGLGfx::OnConfigChanged(u32 bits)
@@ -722,6 +737,11 @@ void OGLGfx::RestoreFramebufferBinding()
   glBindFramebuffer(
       GL_FRAMEBUFFER,
       m_current_framebuffer ? static_cast<OGLFramebuffer*>(m_current_framebuffer)->GetFBO() : 0);
+
+    if (m_current_framebuffer && (m_current_framebuffer->GetWidth() % 640 > 0) && (m_current_framebuffer->GetWidth() < 1000))
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
 }
 
 SurfaceInfo OGLGfx::GetSurfaceInfo() const

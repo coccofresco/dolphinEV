@@ -702,6 +702,7 @@ ShaderCode GenerateVertexShaderCode(APIType api_type, const ShaderHostConfig& ho
     out.Write("gl_Position = float4(o.pos.x, -o.pos.y, o.pos.z, o.pos.w);\n");
   else
     out.Write("gl_Position = o.pos;\n");
+  out.Write("gl_Position.xy /= 4.0;\n");
   out.Write("}}\n");
 
   return out;

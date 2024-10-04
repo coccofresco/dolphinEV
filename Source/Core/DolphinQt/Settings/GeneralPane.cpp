@@ -15,13 +15,14 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
-#include "Core/Config/AchievementSettings.h"
+#include "Core/AchievementManager.h"
 #include "Core/Config/MainSettings.h"
 #include "Core/Config/UISettings.h"
 #include "Core/ConfigManager.h"
 #include "Core/Core.h"
 #include "Core/DolphinAnalytics.h"
 #include "Core/PowerPC/PowerPC.h"
+#include "Core/System.h"
 
 #include "DolphinQt/QtUtils/ModalMessageBox.h"
 #include "DolphinQt/QtUtils/NonDefaultQPushButton.h"
@@ -58,7 +59,7 @@ GeneralPane::GeneralPane(QWidget* parent) : QWidget(parent)
           &GeneralPane::OnEmulationStateChanged);
   connect(&Settings::Instance(), &Settings::ConfigChanged, this, &GeneralPane::LoadConfig);
 
-  OnEmulationStateChanged(Core::GetState());
+  OnEmulationStateChanged(Core::GetState(Core::System::GetInstance()));
 }
 
 void GeneralPane::CreateLayout()
@@ -83,14 +84,10 @@ void GeneralPane::CreateLayout()
 void GeneralPane::OnEmulationStateChanged(Core::State state)
 {
   const bool running = state != Core::State::Uninitialized;
+  const bool hardcore = AchievementManager::GetInstance().IsHardcoreModeActive();
 
   m_checkbox_dualcore->setEnabled(!running);
-#ifdef USE_RETRO_ACHIEVEMENTS
-  bool hardcore = Config::Get(Config::RA_HARDCORE_ENABLED);
   m_checkbox_cheats->setEnabled(!running && !hardcore);
-#else   // USE_RETRO_ACHIEVEMENTS
-  m_checkbox_cheats->setEnabled(!running);
-#endif  // USE_RETRO_ACHIEVEMENTS
   m_checkbox_override_region_settings->setEnabled(!running);
 #ifdef USE_DISCORD_PRESENCE
   m_checkbox_discord_presence->setEnabled(!running);
@@ -197,7 +194,7 @@ void GeneralPane::CreateAutoUpdate()
   auto_update_group_layout->addRow(tr("&Auto Update:"), m_combobox_update_track);
 
   for (const QString& option :
-       {tr("Don't Update"), tr("Beta (once a month)"), tr("Dev (multiple times a day)")})
+       {tr("Don't Update"), tr("Releases (every few months)"), tr("Dev (multiple times a day)")})
     m_combobox_update_track->addItem(option);
 }
 

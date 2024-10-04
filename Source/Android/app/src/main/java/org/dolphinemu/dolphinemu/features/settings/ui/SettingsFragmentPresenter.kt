@@ -1101,6 +1101,16 @@ class SettingsFragmentPresenter(
                     R.string.xlink_kai_bba_ip_description
                 )
             )
+        } else if (serialPort1Type == 11) {
+            // Broadband Adapter (tapserver)
+            sl.add(
+                InputStringSetting(
+                    context,
+                    StringSetting.MAIN_BBA_TAPSERVER_DESTINATION,
+                    R.string.bba_tapserver_destination,
+                    R.string.bba_tapserver_destination_description
+                )
+            )
         } else if (serialPort1Type == 12) {
             // Broadband Adapter (Built In)
             sl.add(
@@ -1109,6 +1119,16 @@ class SettingsFragmentPresenter(
                     StringSetting.MAIN_BBA_BUILTIN_DNS,
                     R.string.bba_builtin_dns,
                     R.string.bba_builtin_dns_description
+                )
+            )
+        } else if (serialPort1Type == 13) {
+            // Modem Adapter (tapserver)
+            sl.add(
+                InputStringSetting(
+                    context,
+                    StringSetting.MAIN_MODEM_TAPSERVER_DESTINATION,
+                    R.string.modem_tapserver_destination,
+                    R.string.modem_tapserver_destination_description
                 )
             )
         }
@@ -1958,6 +1978,26 @@ class SettingsFragmentPresenter(
             )
         )
 
+        sl.add(HeaderSetting(context, R.string.debug_jit_profiling_header, 0))
+        sl.add(
+            SwitchSetting(
+                context,
+                BooleanSetting.MAIN_DEBUG_JIT_ENABLE_PROFILING,
+                R.string.debug_jit_enable_block_profiling,
+                0
+           )
+        )
+        sl.add(
+            RunRunnable(
+                context,
+                R.string.debug_jit_write_block_log_dump,
+                0,
+                0,
+                0,
+                true
+            ) { NativeLibrary.WriteJitBlockLogDump() }
+        )
+
         sl.add(HeaderSetting(context, R.string.debug_jit_header, 0))
         sl.add(
             SwitchSetting(
@@ -2237,7 +2277,7 @@ class SettingsFragmentPresenter(
         controllerNumber: Int
     ) {
         val profiles = ProfileDialogPresenter(menuTag).getProfileNames(false)
-        val profileKey = controller.getProfileName() + "Profile" + (controllerNumber + 1)
+        val profileKey = controller.getProfileKey() + "Profile" + (controllerNumber + 1)
         sl.add(
             StringSingleChoiceSetting(
                 context,
