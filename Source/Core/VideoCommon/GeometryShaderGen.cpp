@@ -327,6 +327,7 @@ static void EmitVertex(ShaderCode& out, const ShaderHostConfig& host_config,
       out.Write("\tgl_Position = float4({0}.pos.x, -{0}.pos.y, {0}.pos.z, {0}.pos.w);\n", vertex);
     else
       out.Write("\tgl_Position = {}.pos;\n", vertex);
+    out.Write("\tgl_Position.xy /= 4.0;\n", vertex);
 
     if (host_config.backend_depth_clamp)
     {
