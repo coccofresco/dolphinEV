@@ -22,6 +22,7 @@ void Start(bool firstStart);
 // VR state
 void GetControllerOrientation(int index, float& pitch, float& yaw, float& roll);
 void GetControllerTranslation(int index, float& x, float& y, float& z);
+bool IsImmersiveModeOn();
 
 // VR rendering integration
 void BindFramebuffer();

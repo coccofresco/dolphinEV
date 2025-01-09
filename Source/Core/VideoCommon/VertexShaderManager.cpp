@@ -14,6 +14,7 @@
 #include "Common/Config/Config.h"
 #include "Common/Logging/Log.h"
 #include "Common/Matrix.h"
+#include "Common/VR/DolphinVR.h"
 #include "Core/Config/GraphicsSettings.h"
 #include "Core/ConfigManager.h"
 #include "Core/Core.h"
@@ -161,6 +162,18 @@ bool VertexShaderManager::UseVertexDepthRange()
 void VertexShaderManager::SetConstants(const std::vector<std::string>& textures,
                                        XFStateManager& xf_state_manager)
 {
+  bool immersiveMode = true;
+  if (Common::VR::IsEnabled())
+  {
+    immersiveMode = Common::VR::IsImmersiveModeOn();
+  }
+  if ((immersiveMode != g_ActiveConfig.bVRImmersiveMode) || (constants.immersive_mode == 0))
+  {
+    g_ActiveConfig.bVRImmersiveMode = immersiveMode;
+    constants.immersive_mode = immersiveMode ? 4 : 1;
+    dirty = true;
+  }
+
   if (constants.missing_color_hex != g_ActiveConfig.iMissingColorValue)
   {
     const float a = (g_ActiveConfig.iMissingColorValue) & 0xFF;

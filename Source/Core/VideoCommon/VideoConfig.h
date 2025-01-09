@@ -231,6 +231,7 @@ struct VideoConfig final
   bool bFastDepthCalc = false;
   bool bVertexRounding = false;
   bool bVISkip = false;
+  bool bVRImmersiveMode = true;
   int iEFBAccessTileSize = 0;
   int iSaveTargetId = 0;  // TODO: Should be dropped
   u32 iMissingColorValue = 0;
