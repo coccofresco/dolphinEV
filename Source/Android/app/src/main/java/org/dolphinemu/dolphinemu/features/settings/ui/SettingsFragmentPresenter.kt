@@ -1327,6 +1327,14 @@ class SettingsFragmentPresenter(
             )
         )
         sl.add(
+          SwitchSetting(
+            context,
+            BooleanSetting.GFX_HACK_VR_IMMERSIVE_MODE,
+            R.string.vr_immersive_mode,
+            R.string.vr_immersive_mode_description
+          )
+        )
+        sl.add(
             SingleChoiceSetting(
                 context,
                 IntSetting.GFX_MSAA,

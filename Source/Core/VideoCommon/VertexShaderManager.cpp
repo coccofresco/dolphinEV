@@ -162,15 +162,10 @@ bool VertexShaderManager::UseVertexDepthRange()
 void VertexShaderManager::SetConstants(const std::vector<std::string>& textures,
                                        XFStateManager& xf_state_manager)
 {
-  bool immersiveMode = true;
-  if (Common::VR::IsEnabled())
+  float target = g_ActiveConfig.bVRImmersiveMode ? 4 : 1;
+  if (constants.immersive_mode != target)
   {
-    immersiveMode = Common::VR::IsImmersiveModeOn();
-  }
-  if ((immersiveMode != g_ActiveConfig.bVRImmersiveMode) || (constants.immersive_mode == 0))
-  {
-    g_ActiveConfig.bVRImmersiveMode = immersiveMode;
-    constants.immersive_mode = immersiveMode ? 4 : 1;
+    constants.immersive_mode = target;
     dirty = true;
   }
 

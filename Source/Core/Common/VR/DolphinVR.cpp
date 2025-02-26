@@ -8,6 +8,8 @@
 #include "Common/VR/VRMath.h"
 #include "Common/VR/VRRenderer.h"
 
+#include "VideoCommon/VideoConfig.h"
+
 namespace Common::VR
 {
 Base* s_module_base = NULL;
@@ -121,11 +123,6 @@ void GetControllerTranslation(int index, float& x, float& y, float& z)
   z = pos.z;
 }
 
-bool IsImmersiveModeOn()
-{
-  return s_module_renderer->GetConfigFloat(CONFIG_CANVAS_SCALE) > 1.0f;
-}
-
 /*
 ================================================================================
 
@@ -165,16 +162,21 @@ bool StartRender()
     float x = -tan(ToRadians(angles.y - s_module_renderer->GetConfigFloat(CONFIG_MENU_YAW)));
     float y = -tan(ToRadians(angles.x)) * s_module_renderer->GetConfigFloat(CONFIG_CANVAS_ASPECT);
 
-    // Update immersive mode
-    static bool immersive = true;
+    // Update screen distance
     static bool wasPreseed = false;
     bool lthumb = s_module_input->GetButtonState(0) & 0x00000400;
     if (lthumb && !wasPreseed)
     {
-      immersive = !immersive;
+      float value = s_module_renderer->GetConfigFloat(CONFIG_CANVAS_DISTANCE);
+      value -= 0.5f;
+      if (value < -1.75)
+        value = 1.5;
+      s_module_renderer->SetConfigFloat(CONFIG_CANVAS_DISTANCE, value);
     }
     wasPreseed = lthumb;
-    s_module_renderer->SetConfigFloat(CONFIG_CANVAS_SCALE, immersive ? 4.0f : 1.0f);
+
+    // Update immersive mode
+    s_module_renderer->SetConfigFloat(CONFIG_CANVAS_SCALE, g_ActiveConfig.bVRImmersiveMode ? 4.0f : 1.0f);
 
     // Update game
     UpdateInput(0, l, r, x, y, joy_l.x, joy_l.y, joy_r.x, joy_r.y);
