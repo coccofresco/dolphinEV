@@ -847,6 +847,7 @@ enum class BooleanSetting(
         false
     ),
     GFX_HACK_VI_SKIP(Settings.FILE_GFX, Settings.SECTION_GFX_HACKS, "VISkip", true),
+    GFX_HACK_VR_IMMERSIVE_MODE(Settings.FILE_GFX, Settings.SECTION_GFX_HACKS, "VRImmersiveMode", false),
     GFX_HACK_FAST_TEXTURE_SAMPLING(
         Settings.FILE_GFX,
         Settings.SECTION_GFX_HACKS,

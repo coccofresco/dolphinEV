@@ -302,7 +302,7 @@ void Renderer::FinishFrame(Base* engine)
     cylinder_layer.pose.orientation = Multiply(pitch, yaw);
     cylinder_layer.pose.position = pos;
     cylinder_layer.radius = 3.0f;
-    cylinder_layer.centralAngle = (float)(M_PI * 0.33) * 4.0f;
+    cylinder_layer.centralAngle = (float)(M_PI * 0.33) * GetConfigFloat(CONFIG_CANVAS_SCALE);
     cylinder_layer.aspectRatio = GetConfigFloat(CONFIG_CANVAS_ASPECT);
 
     // Build the cylinder layer
