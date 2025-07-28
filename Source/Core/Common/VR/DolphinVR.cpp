@@ -53,7 +53,13 @@ void InitOnAndroid(JNIEnv* env, jobject obj, const char* vendor, int version, co
   s_module_renderer->SetConfigFloat(CONFIG_CANVAS_DISTANCE, 1.0f);
 
   // Set platform flags
-  if ((strcmp(vendor, "Meta") == 0) || (strcmp(vendor, "Oculus") == 0))
+  if (strcmp(vendor, "Pico") == 0)
+  {
+    s_module_base->SetPlatformFlag(PLATFORM_CONTROLLER_PICO, true);
+    s_module_base->SetPlatformFlag(PLATFORM_EXTENSION_INSTANCE, true);
+    s_module_base->SetPlatformFlag(PLATFORM_EXTENSION_PERFORMANCE, true);
+  }
+  else
   {
     s_module_base->SetPlatformFlag(PLATFORM_CONTROLLER_QUEST, true);
     s_module_base->SetPlatformFlag(PLATFORM_EXTENSION_PERFORMANCE, true);

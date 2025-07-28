@@ -42,9 +42,9 @@ android {
         minSdk = 21
         targetSdk = 34
 
-        versionCode = getBuildVersionCode()
+        versionCode = 1 //getBuildVersionCode()
 
-        versionName = getGitVersion()
+        versionName = "0.0.1" //getGitVersion()
 
         buildConfigField("String", "GIT_HASH", "\"${getGitHash()}\"")
         buildConfigField("String", "BRANCH", "\"${getBranch()}\"")
@@ -88,6 +88,12 @@ android {
             versionNameSuffix = "-debug"
             isJniDebuggable = true
         }
+        release {
+          resValue("string", "app_name_suffixed", "DolphinXR")
+          applicationIdSuffix = ".xr"
+          versionNameSuffix = "-xr"
+          isJniDebuggable = false
+        }
     }
 
     externalNativeBuild {
@@ -104,7 +110,7 @@ android {
                 arguments("-DANDROID_STL=c++_static", "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
                           "-DOPENXR=TRUE")
                 // , "-DENABLE_GENERIC=ON"
-                abiFilters("arm64-v8a", "x86_64") //, "armeabi-v7a", "x86"
+                abiFilters("arm64-v8a") //, "armeabi-v7a", "x86", "x86_64"
 
                 // Uncomment the line below if you don't want to build the C++ unit tests
                 //targets("main", "hook_impl", "main_hook", "gsl_alloc_hook", "file_redirect_hook")

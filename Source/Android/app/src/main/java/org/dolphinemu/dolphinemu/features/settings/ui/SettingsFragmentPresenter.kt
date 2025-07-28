@@ -1457,13 +1457,13 @@ class SettingsFragmentPresenter(
                 "GL_ANDROID_extension_pack_es31a"
             )
         ) {
-            sl.add(
+            /*sl.add(
                 SubmenuSetting(
                     context,
                     R.string.stereoscopy_submenu,
                     MenuTag.STEREOSCOPY
                 )
-            )
+            )*/
         }
     }
 

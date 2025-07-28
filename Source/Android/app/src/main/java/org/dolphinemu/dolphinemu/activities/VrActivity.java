@@ -24,6 +24,9 @@ public class VrActivity extends EmulationActivity
     {
       return true;
     }
+    if (Build.MANUFACTURER.compareToIgnoreCase("PICO") == 0) {
+      return true;
+    }
     return false;
   }
 
@@ -31,7 +34,8 @@ public class VrActivity extends EmulationActivity
   public static void openIntent(Activity context, String[] filePaths, boolean riivolution)
   {
     // 0. Create the launch intent
-    var intent = new Intent(context, VrActivity.class);
+    boolean isPico = Build.MANUFACTURER.compareToIgnoreCase("PICO") == 0;
+    Intent intent = new Intent(context, isPico ? VrActivityPico.class : VrActivityMeta.class);
     intent.putExtra(EXTRA_SELECTED_GAMES, filePaths);
     intent.putExtra(EXTRA_RIIVOLUTION, riivolution);
 

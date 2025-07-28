@@ -138,7 +138,7 @@
             android:theme="@style/Theme.Dolphin.Main" />
 
         <activity
-            android:name=".activities.VrActivity"
+            android:name=".activities.VrActivityMeta"
             android:configChanges="density|orientation|screenSize|keyboard|keyboardHidden|uiMode"
             android:exported="true"
             android:launchMode="singleTask"
@@ -150,6 +150,22 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="com.oculus.intent.category.VR" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activities.VrActivityPico"
+            android:configChanges="density|orientation|screenSize|keyboard|keyboardHidden|uiMode"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:resizeableActivity="false"
+            android:screenOrientation="landscape"
+            android:process=":vr_process"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            <meta-data android:name="pvr.app.type" android:value="vr" />
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="com.oculus.intent.category.VR" />
             </intent-filter>
         </activity>
 
